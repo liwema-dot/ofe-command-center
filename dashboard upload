@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFE Command Center</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#f5f3ef;--bg1:#ffffff;--bg2:#f9f7f4;--bg3:#e8e3db;
+  --t1:#1e293b;--t2:#4b5563;--t3:#9ca3af;
+  --amber:#92620a;--amberl:#b47d1a;--amberbg:rgba(146,98,10,0.09);
+  --teal:#0f766e;--teall:#0d9488;--tealbg:rgba(15,118,110,0.09);
+  --blue:#3b6ea8;--bluebg:rgba(59,110,168,0.09);
+  --coral:#c0392b;--coralbg:rgba(192,57,43,0.09);
+  --green:#2d6a4f;--greenbg:rgba(45,106,79,0.09);
+  --purple:#7b3f6e;--purplebg:rgba(123,63,110,0.09);
+  --pink:#9d4e6e;--pinkbg:rgba(157,78,110,0.09);
+  --gold:#7c5c1e;--goldbg:rgba(124,92,30,0.09);
+  --mono:'Courier New',monospace;
+}
+body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:14px}
+.shell{display:grid;grid-template-columns:228px 1fr;grid-template-rows:56px 1fr;min-height:100vh}
+.topbar{grid-column:1/-1;background:#1e293b;border-bottom:none;display:flex;align-items:center;gap:14px;padding:0 20px;box-shadow:0 2px 8px rgba(0,0,0,0.12)}
+.pulse{width:7px;height:7px;border-radius:50%;background:#d97706;flex-shrink:0;animation:pu 2s infinite}
+@keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(217,119,6,.5)}50%{box-shadow:0 0 0 7px rgba(217,119,6,0)}}
+.topbar-title{font-size:13px;letter-spacing:.1em;color:#fbbf24;text-transform:uppercase;font-family:var(--mono)}
+.topbar-date{font-size:12px;color:#94a3b8;margin-left:auto;font-family:var(--mono)}
+.sidebar{background:#f0ede8;border-right:1px solid var(--bg3);padding:10px 0;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.nav-section{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--mono);padding:13px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:7px 16px;font-size:12px;color:var(--t2);cursor:pointer;border-left:3px solid transparent;transition:all .12s}
+.nav-item:hover{background:var(--bg3);color:var(--t1)}
+.nav-item.active{border-left-color:var(--amber);color:var(--amber);background:var(--amberbg);font-weight:500}
+.nav-item i{font-size:14px;width:16px;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:9px;background:var(--coral);color:#fff;border-radius:8px;padding:1px 5px;font-family:var(--mono)}
+.nav-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.main{overflow-y:auto;background:var(--bg0)}
+.panel{display:none;padding:18px;flex-direction:column;gap:14px}
+.panel.active{display:flex}
+.card{background:var(--bg1);border:1px solid var(--bg3);border-radius:8px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04)}
+.ch{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.ct{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--t2);font-family:var(--mono)}
+.ca{margin-left:auto;font-size:11px;color:var(--amber);cursor:pointer;font-family:var(--mono);opacity:.8}
+.ca:hover{opacity:1}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.met{background:var(--bg1);border-radius:6px;padding:12px;border:1px solid var(--bg3);box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.mv{font-size:24px;color:var(--amber);font-family:var(--mono);line-height:1}
+.ml{font-size:10px;color:var(--t3);margin-top:3px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.md{font-size:10px;margin-top:5px;font-family:var(--mono)}
+.up{color:var(--teal)}.dn{color:var(--coral)}
+.di{padding:9px 0;border-bottom:1px solid var(--bg3)}
+.di:last-child{border-bottom:none}
+.dh{display:flex;justify-content:space-between;align-items:baseline}
+.dt{font-size:12px;color:var(--t1)}
+.dd{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.db{font-size:11px;color:var(--t2);margin-top:3px;line-height:1.5}
+.ow{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.chip{font-size:10px;background:var(--bg2);color:var(--t2);border-radius:10px;padding:2px 8px;font-family:var(--mono);border:1px solid var(--bg3)}
+.sc{font-size:10px;border-radius:10px;padding:2px 7px;font-family:var(--mono)}
+.s-open{background:rgba(146,98,10,0.12);color:var(--amber);font-weight:500}
+.s-closed{background:rgba(15,118,110,0.12);color:var(--teal);font-weight:500}
+.s-esc{background:rgba(192,57,43,0.12);color:var(--coral);font-weight:500}
+.s-watch{background:rgba(59,110,168,0.12);color:var(--blue);font-weight:500}
+.s-pos{background:rgba(15,118,110,0.12);color:var(--teal);font-weight:500}
+.s-flag{background:rgba(192,57,43,0.12);color:var(--coral);font-weight:500}
+.ai-bar{background:var(--bg1);border:1px solid var(--bg3);border-left:3px solid var(--amber);border-radius:7px;padding:10px 14px;display:flex;gap:10px;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.ail{font-size:10px;font-family:var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.aii{flex:1;background:var(--bg2);border:1px solid var(--bg3);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);font-family:Georgia,serif;outline:none}
+.aii:focus{border-color:var(--amber)}
+.aii::placeholder{color:var(--t3)}
+.aib{background:#1e293b;color:#fff;border:none;border-radius:5px;padding:7px 12px;font-size:11px;font-family:var(--mono);cursor:pointer;font-weight:600}
+.aib:hover{background:var(--amber)}
+.mi{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--bg3)}
+.mi:last-child{border-bottom:none}
+.mt-time{font-family:var(--mono);font-size:10px;color:var(--t3);min-width:54px;padding-top:2px}
+.mb{flex:1}
+.mn{font-size:12px;color:var(--t1)}
+.mx{font-size:10px;color:var(--t3);margin-top:2px}
+.am{font-size:10px;font-family:var(--mono);color:var(--amber);border:1px solid rgba(146,98,10,0.3);border-radius:4px;padding:2px 7px;cursor:pointer;margin-top:4px;display:inline-block;background:rgba(146,98,10,0.07);transition:background .12s}
+.am:hover{background:rgba(146,98,10,0.14)}
+.slbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--amber);font-family:var(--mono);margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid var(--amberbg)}
+.info-bar{border-radius:7px;padding:11px 14px;font-size:12px;font-family:var(--mono);margin-bottom:2px}
+.okr-bar-bg{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.okr-bar-fill{height:100%;border-radius:2px}
+.prog-item{padding:9px 0;border-bottom:1px solid var(--bg3)}
+.prog-item:last-child{border-bottom:none}
+.prog-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.prog-n{font-size:12px;color:var(--t1)}
+.prog-p{font-size:11px;color:var(--amber);font-family:var(--mono);font-weight:600}
+.prog-m{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px}
+.rel-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bg3)}
+.rel-item:last-child{border-bottom:none}
+.rel-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);font-weight:700;flex-shrink:0}
+.rel-name{font-size:12px;color:var(--t1)}
+.rel-role{font-size:10px;color:var(--t3)}
+.rel-last{font-size:10px;font-family:var(--mono);white-space:nowrap}
+.rel-ov{color:var(--coral);font-weight:600}.rel-ok{color:var(--teal);font-weight:600}.rel-soon{color:var(--amber);font-weight:600}
+.own-badge{font-size:9px;font-family:var(--mono);border-radius:3px;padding:1px 5px;margin-right:4px}
+.own-pres{background:rgba(124,92,30,0.1);color:var(--gold);border:1px solid rgba(124,92,30,0.25)}
+.own-ofe{background:rgba(59,110,168,0.1);color:var(--blue);border:1px solid rgba(59,110,168,0.25)}
+.own-shared{background:rgba(15,118,110,0.1);color:var(--teal);border:1px solid rgba(15,118,110,0.25)}
+.win-item{padding:9px 0;border-bottom:1px solid var(--bg3)}
+.win-item:last-child{border-bottom:none}
+.wh{display:flex;justify-content:space-between;align-items:baseline}
+.wt{font-size:12px;color:var(--t1)}
+.wd{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.wb{font-size:11px;color:var(--t2);margin-top:3px;line-height:1.5}
+.wtag{font-size:10px;border-radius:4px;padding:2px 6px;font-family:var(--mono)}
+.wt-ofe{background:rgba(146,98,10,0.1);color:var(--amber);border:1px solid rgba(146,98,10,0.2);font-weight:600}
+.wt-dbe{background:rgba(123,63,110,0.1);color:var(--purple);border:1px solid rgba(123,63,110,0.2);font-weight:600}
+.wt-comms{background:rgba(59,110,168,0.1);color:var(--blue);border:1px solid rgba(59,110,168,0.2);font-weight:600}
+.wt-culture{background:rgba(157,78,110,0.1);color:var(--pink);border:1px solid rgba(157,78,110,0.2);font-weight:600}
+.wt-ops{background:rgba(15,118,110,0.1);color:var(--teal);border:1px solid rgba(15,118,110,0.2);font-weight:600}
+.eng-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bg3)}
+.eng-item:last-child{border-bottom:none}
+.eng-icon{width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.eng-title{font-size:12px;color:var(--t1)}
+.eng-meta{font-size:10px;color:var(--t3);margin-top:2px}
+.eng-date{font-size:10px;font-family:var(--mono);color:var(--amberl);margin-left:auto;white-space:nowrap}
+.eng-urgent{color:var(--coral);font-weight:700}
+.sq-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--bg3);border-radius:6px;overflow:hidden;border:1px solid var(--bg3)}
+.quadrant{background:var(--bg2);padding:10px;min-height:80px}
+.quad-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);font-family:var(--mono);margin-bottom:6px}
+.s-pill{display:inline-flex;align-items:center;gap:4px;background:var(--bg1);border:1px solid var(--bg3);border-radius:10px;padding:2px 8px;font-size:10px;color:var(--t2);font-family:var(--mono);margin:2px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.05)}
+.s-pill:hover{border-color:var(--amber);color:var(--amber)}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.action-row{display:flex;flex-direction:column;gap:7px}
+.action-btn{background:var(--bg2);color:var(--t2);border:1px solid var(--bg3);border-radius:6px;padding:10px 12px;font-size:11px;font-family:var(--mono);cursor:pointer;text-align:left;transition:all .12s}
+.action-btn:hover{color:var(--amber);border-color:rgba(146,98,10,0.4);background:var(--amberbg)}
+.form-input{background:var(--bg2);border:1px solid var(--bg3);border-radius:5px;padding:7px 10px;color:var(--t1);font-size:12px;font-family:Georgia,serif;outline:none;width:100%;transition:border-color .12s}
+.form-input:focus{border-color:var(--amber)}
+.form-input::placeholder{color:var(--t3)}
+.form-ta{background:var(--bg2);border:1px solid var(--bg3);border-radius:5px;padding:8px 10px;color:var(--t1);font-size:12px;font-family:Georgia,serif;outline:none;width:100%;resize:vertical;min-height:60px;transition:border-color .12s}
+.form-ta:focus{border-color:var(--amber)}
+.form-ta::placeholder{color:var(--t3)}
+.fsub{background:#1e293b;color:#fff;border:none;border-radius:5px;padding:7px 14px;font-size:11px;font-family:var(--mono);cursor:pointer;font-weight:600}
+.fsub:hover{background:var(--amber)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="topbar">
+    <div class="pulse"></div>
+    <span class="topbar-title">OFE Command Center</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="sidebar">
+    <div class="nav-item active" onclick="show('overview')" style="margin-top:8px"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+    <div class="nav-item" onclick="show('capture')"><i class="ti ti-bolt"></i> Quick capture <span class="nav-badge">!</span></div>
+
+    <div class="nav-section">OFE · Executive support</div>
+    <div class="nav-item" onclick="show('briefing')"><i class="ti ti-id-badge"></i> Briefing builder</div>
+    <div class="nav-item" onclick="show('decisions')"><i class="ti ti-gavel"></i> Decision log</div>
+    <div class="nav-item" onclick="show('minutes')"><i class="ti ti-notes"></i> Meeting minutes</div>
+    <div class="nav-item" onclick="show('initiatives')"><i class="ti ti-rocket"></i> Strategic initiatives</div>
+
+    <div class="nav-section">Cross-cutting</div>
+    <div class="nav-item" onclick="show('okrs')"><i class="ti ti-target"></i> OKRs</div>
+    <div class="nav-item" onclick="show('stakeholders')"><i class="ti ti-sitemap"></i> Stakeholder map</div>
+    <div class="nav-item" onclick="show('engagement')"><i class="ti ti-chart-radar"></i> Engagement</div>
+    <div class="nav-item" onclick="show('synthesis')"><i class="ti ti-sparkles"></i> AI synthesis</div>
+
+    <div class="nav-section">OFE · Office health</div>
+    <div class="nav-item" onclick="show('wins')"><i class="ti ti-trophy"></i> Wins &amp; impact</div>
+    <div class="nav-item" onclick="show('relationships')"><i class="ti ti-heart-handshake"></i> Relationship health <span class="nav-dot" style="background:var(--coral)"></span></div>
+    <div class="nav-item" onclick="show('momentum')"><i class="ti ti-antenna"></i> Office momentum</div>
+
+    <div class="nav-section">DBE · People &amp; culture</div>
+    <div class="nav-item" onclick="show('programs')"><i class="ti ti-layout-grid"></i> DBE programs</div>
+    <div class="nav-item" onclick="show('community')"><i class="ti ti-users"></i> Community pulse</div>
+
+    <div class="nav-section">External partnerships</div>
+    <div class="nav-item" onclick="show('speaking')"><i class="ti ti-microphone"></i> Speaking &amp; events</div>
+    <div class="nav-item" onclick="show('partnerships')"><i class="ti ti-world"></i> Partner relationships</div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-overview">
+      <div class="mrow">
+        <div class="met" style="border-top:3px solid var(--amber)"><div class="mv">7</div><div class="ml">Open decisions</div><div class="md dn">↑ 2 need owners</div></div>
+        <div class="met" style="border-top:3px solid var(--teal)"><div class="mv" style="color:var(--teal)">62%</div><div class="ml">OKR progress</div><div class="md up">↑ 4pt this month</div></div>
+        <div class="met" style="border-top:3px solid var(--purple)"><div class="mv" style="color:var(--purple)">4</div><div class="ml">DBE programs active</div><div class="md" style="color:var(--t3)">1 milestone due soon</div></div>
+        <div class="met" style="border-top:3px solid var(--coral)"><div class="mv" style="color:var(--coral)">3</div><div class="ml">Relationships overdue</div><div class="md dn">Action needed</div></div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-calendar" style="color:var(--amber)"></i><span class="ct">Today's meetings</span></div>
+          <div class="mi"><div class="mt-time">09:00</div><div class="mb"><div class="mn">Weekly ops standup</div><div class="mx">12 attendees · Recurring</div><span class="am">⚡ Generate minutes</span></div></div>
+          <div class="mi"><div class="mt-time">11:30</div><div class="mb"><div class="mn">Director 1:1 — Regional leads</div><div class="mx">Stakeholder check-in</div><span class="am">⚡ Briefing card</span></div></div>
+          <div class="mi"><div class="mt-time">14:00</div><div class="mb"><div class="mn">Q3 OKR review — full team</div><div class="mx">28 attendees · Quarterly</div><span class="am">⚡ Pre-brief</span></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-target" style="color:var(--teal)"></i><span class="ct">OKR snapshot</span><span class="ca" onclick="show('okrs')">Details →</span></div>
+          <div class="di"><div class="dh"><span class="dt">O1 · Operational excellence</span><span class="dd" style="color:var(--teal);font-family:var(--mono);font-weight:600">71%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:71%;background:var(--teal)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR1.1 74% · KR1.2 68% at-risk · KR1.3 71%</div></div>
+          <div class="di"><div class="dh"><span class="dt">O2 · Associate engagement</span><span class="dd" style="color:var(--amber);font-family:var(--mono);font-weight:600">58%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:58%;background:var(--amber)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR2.1 63% · KR2.2 52% at-risk</div></div>
+          <div class="di"><div class="dh"><span class="dt">O3 · Stakeholder alignment</span><span class="dd" style="color:var(--coral);font-family:var(--mono)">55%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:55%;background:var(--coral)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR3.1 60% · KR3.2 48% behind</div></div>
+          <div class="di"><div class="dh"><span class="dt">O4 · Program execution</span><span class="dd" style="color:var(--teal);font-family:var(--mono);font-weight:600">77%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:77%;background:var(--blue)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR4.1 80% · KR4.2 75% · KR4.3 76%</div></div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-microphone" style="color:var(--gold)"></i><span class="ct">Upcoming engagements</span><span class="ca" onclick="show('speaking')">All →</span></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--goldbg);color:var(--gold)"><i class="ti ti-microphone"></i></div><div style="flex:1"><div class="eng-title">Division all-hands keynote</div><div class="eng-meta">200+ associates · Remarks + Q&amp;A</div><span class="am">⚡ Draft remarks</span></div><div class="eng-date eng-urgent">Jun 3 · 11d</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--bluebg);color:var(--blue)"><i class="ti ti-building"></i></div><div style="flex:1"><div class="eng-title">Regional leadership summit — panel</div><div class="eng-meta">External · 45 min · Chicago</div></div><div class="eng-date">Jun 18</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--tealbg);color:var(--teal)"><i class="ti ti-handshake"></i></div><div style="flex:1"><div class="eng-title">Partner org board meeting</div><div class="eng-meta">Quarterly update · Report due Jun 30</div></div><div class="eng-date">Jul 8</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-antenna" style="color:var(--blue)"></i><span class="ct">Office momentum</span><span class="ca" onclick="show('momentum')">Full view →</span></div>
+          <div class="di"><div class="dh"><span class="dt">Decision velocity</span><span class="sc s-closed">Healthy</span></div><div class="db">9 decisions this month. 7 closed, 2 open. Avg close: 4.2 days — faster than last quarter.</div></div>
+          <div class="di"><div class="dh"><span class="dt">Action item conversion</span><span class="sc s-open">Watch</span></div><div class="db">31 items from 14 meetings. 22 closed (71%). 4 overdue — Torres, Gupta, Reyes, Park.</div></div>
+          <div class="di"><div class="dh"><span class="dt">Open items aging</span><span class="sc s-esc">Flag</span></div><div class="db">3 items over 14 days. Oldest: KR2.2 revision at 11 days. Decision nudge recommended.</div></div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-chart-radar" style="color:var(--green)"></i><span class="ct">Engagement pulse</span><span class="ca" onclick="show('engagement')">Details →</span></div>
+          <div class="mrow" style="grid-template-columns:1fr 1fr;gap:8px">
+            <div class="met"><div class="mv" style="font-size:20px;color:var(--teal)">84</div><div class="ml">Operations</div><div class="md up">↑ 2</div></div>
+            <div class="met"><div class="mv" style="font-size:20px;color:var(--amber)">76</div><div class="ml">Field teams</div><div class="md dn">↓ 4</div></div>
+            <div class="met"><div class="mv" style="font-size:20px;color:var(--teal)">81</div><div class="ml">Programs</div><div class="md up">↑ 1</div></div>
+            <div class="met"><div class="mv" style="font-size:20px;color:var(--coral)">68</div><div class="ml">Admin</div><div class="md dn">↓ 7</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-heart-handshake" style="color:var(--coral)"></i><span class="ct">Relationship health — flagged</span><span class="ca" onclick="show('relationships')">Full view →</span></div>
+          <div class="rel-item"><div class="rel-av" style="background:rgba(192,57,43,0.12);color:var(--coral)">ER</div><div style="flex:1"><div class="rel-name">Dir. Reyes</div><div class="rel-role">Regional Operations</div></div><div style="text-align:right"><span class="own-badge own-shared">Shared</span><div class="rel-last rel-ov">38 days · overdue</div></div></div>
+          <div class="rel-item"><div class="rel-av" style="background:rgba(192,57,43,0.12);color:var(--coral)">MT</div><div style="flex:1"><div class="rel-name">M. Torres</div><div class="rel-role">Field Operations</div></div><div style="text-align:right"><span class="own-badge own-ofe">OFE</span><div class="rel-last rel-ov">45 days · overdue</div></div></div>
+          <div class="rel-item"><div class="rel-av" style="background:rgba(146,98,10,0.12);color:var(--amber)">VC</div><div style="flex:1"><div class="rel-name">VP Chen</div><div class="rel-role">Associate Experience</div></div><div style="text-align:right"><span class="own-badge own-pres">President</span><div class="rel-last rel-soon">22 days · due soon</div></div></div>
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--bg2);display:flex;gap:10px;font-size:10px;font-family:var(--mono)">
+            <span style="display:flex;align-items:center;gap:4px"><span class="own-badge own-pres">President</span>his to tend</span>
+            <span style="display:flex;align-items:center;gap:4px"><span class="own-badge own-ofe">OFE</span>yours to tend</span>
+            <span style="display:flex;align-items:center;gap:4px"><span class="own-badge own-shared">Shared</span>coordinate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-layout-grid" style="color:var(--purple)"></i><span class="ct">DBE programs snapshot</span><span class="ca" onclick="show('programs')">All →</span></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n">Associate mentorship cohort</span><span class="prog-p">65%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:65%;background:var(--purple)"></div></div><div class="prog-m">24 enrolled · Session 3 of 6 · Next: Jun 3</div></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n">Leadership development series</span><span class="prog-p">40%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:40%;background:var(--teal)"></div></div><div class="prog-m">18 enrolled · Module 2 of 5 · On track</div></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n">Culture listening tour</span><span class="prog-p">80%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:80%;background:var(--amber)"></div></div><div class="prog-m">4 of 5 regions complete · Report due Jun 10</div></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n">Manager effectiveness workshop</span><span class="prog-p">20%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:20%;background:var(--blue)"></div></div><div class="prog-m">Planning phase · Launch target: Jul 1</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-trophy" style="color:var(--amber)"></i><span class="ct">Recent office wins</span><span class="ca" onclick="show('wins')">Full log →</span></div>
+          <div class="win-item"><div class="wh"><span class="wt">Vendor decision unblocked</span><span class="wd">May 20</span></div><div class="wb">Facilitated alignment between legal and operations. Decision 3 days ahead of deadline, saving ~2 weeks of delay.</div><div class="ow"><span class="wtag wt-ofe">OFE</span><span class="chip">Influence</span></div></div>
+          <div class="win-item"><div class="wh"><span class="wt">Mentorship cohort launched</span><span class="wd">May 15</span></div><div class="wb">24 associates enrolled across 3 regions. First session rated 4.7/5.</div><div class="ow"><span class="wtag wt-dbe">DBE</span><span class="chip">Delivery</span></div></div>
+          <div class="win-item"><div class="wh"><span class="wt">Town hall remarks — 200+ attendees</span><span class="wd">May 10</span></div><div class="wb">Drafted executive remarks used verbatim. Credited by EVP Morris in follow-up conversations.</div><div class="ow"><span class="wtag wt-comms">Comms</span></div></div>
+        </div>
+      </div>
+
+      <div class="ai-bar">
+        <span class="ail">⚡ synthesize</span>
+        <input class="aii" id="ov-input" placeholder="What needs attention this week? / Draft a leadership readout / Summarize open items for the president..." />
+        <button class="aib" onclick="alert('Connect to Claude API to enable synthesis.')">Run →</button>
+      </div>
+    </div>
+
+    <!-- QUICK CAPTURE -->
+    <div class="panel" id="panel-capture">
+      <div class="slbl">Quick capture</div>
+      <div class="card">
+        <div class="ch"><i class="ti ti-bolt" style="color:var(--amber)"></i><span class="ct">What are you capturing?</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="action-btn" onclick="show('minutes')"><i class="ti ti-notes" style="color:var(--blue)"></i> Meeting minutes<div style="font-size:10px;color:var(--t3);margin-top:2px">Paste notes → AI structures</div></div>
+          <div class="action-btn" onclick="show('decisions')"><i class="ti ti-gavel" style="color:var(--amber)"></i> Decision log entry<div style="font-size:10px;color:var(--t3);margin-top:2px">Record a decision with context</div></div>
+          <div class="action-btn" onclick="show('wins')"><i class="ti ti-trophy" style="color:var(--amberl)"></i> Office win or impact<div style="font-size:10px;color:var(--t3);margin-top:2px">Log what the office shipped or unblocked</div></div>
+          <div class="action-btn" onclick="show('community')"><i class="ti ti-users" style="color:var(--pink)"></i> Community signal<div style="font-size:10px;color:var(--t3);margin-top:2px">Qualitative observation from associates</div></div>
+          <div class="action-btn" onclick="show('relationships')"><i class="ti ti-heart-handshake" style="color:var(--coral)"></i> Relationship note<div style="font-size:10px;color:var(--t3);margin-top:2px">Sentiment update or connection logged</div></div>
+          <div class="action-btn" onclick="show('speaking')"><i class="ti ti-microphone" style="color:var(--gold)"></i> Engagement / speaking<div style="font-size:10px;color:var(--t3);margin-top:2px">Add to president's events calendar</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRIEFING BUILDER -->
+    <div class="panel" id="panel-briefing">
+      <div class="slbl">Briefing builder</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-id-badge" style="color:var(--amber)"></i><span class="ct">Build a briefing card</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">Meeting / event</div><input class="form-input" placeholder="e.g. Q3 OKR review — full team" /></div>
+            <div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">Who's in the room</div><input class="form-input" placeholder="e.g. EVP Morris, Dir. Park, VP Chen, regional leads" /></div>
+            <div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">Decision(s) needed</div><input class="form-input" placeholder="e.g. Approve Q4 headcount plan" /></div>
+            <div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">Context &amp; sensitivities</div><textarea class="form-ta" rows="3" placeholder="What does the president need to know walking in?"></textarea></div>
+            <button class="fsub">⚡ Generate briefing ↗</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-files" style="color:var(--amber)"></i><span class="ct">Saved briefings</span></div>
+          <div class="di"><div class="dh"><span class="dt">Q3 OKR review — May 23</span><span class="dd">28 attendees</span></div><div class="db">Decision: Q4 headcount approval. Watch: Dir. Reyes on backfill; VP Chen on KR2.2.</div><div class="ow"><span class="am">⚡ Expand to full brief</span></div></div>
+          <div class="di"><div class="dh"><span class="dt">Dir. Reyes 1:1 — May 27</span><span class="dd">1:1</span></div><div class="db">Priority: headcount freeze impact, backfill exception process. Tone: reassuring, direct.</div><div class="ow"><span class="am">⚡ Talking points</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECISION LOG -->
+    <div class="panel" id="panel-decisions">
+      <div class="slbl">Decision log</div>
+      <div class="card">
+        <div class="ch"><i class="ti ti-gavel" style="color:var(--amber)"></i><span class="ct">Open decisions</span><span class="ca">+ Log decision</span></div>
+        <div class="di"><div class="dh"><span class="dt">Vendor selection — logistics partner</span><span class="dd">May 18</span></div><div class="db">Pending legal review. President to approve. Target: May 28.</div><div class="ow"><span class="sc s-open">Open</span><span class="chip">President</span><span class="chip">Legal</span></div></div>
+        <div class="di"><div class="dh"><span class="dt">KR2.2 target revision</span><span class="dd">May 12</span></div><div class="db">Proposed revision from 85 to 80. Awaiting OKR owner alignment. 11 days open.</div><div class="ow"><span class="sc s-esc">Escalated</span><span class="chip">VP Chen</span><span class="chip">Dir. Reyes</span></div></div>
+        <div class="di"><div class="dh"><span class="dt">Q3 headcount freeze</span><span class="dd">May 15</span></div><div class="db">Confirmed pause through Q3. Backfills case-by-case.</div><div class="ow"><span class="sc s-closed">Closed</span><span class="chip">CFO Walsh</span></div></div>
+      </div>
+    </div>
+
+    <!-- MEETING MINUTES -->
+    <div class="panel" id="panel-minutes">
+      <div class="slbl">Meeting minutes</div>
+      <div class="card">
+        <div class="ch"><i class="ti ti-notes" style="color:var(--blue)"></i><span class="ct">Recent minutes</span><span class="ca">+ New minutes</span></div>
+        <div class="di"><div class="dh"><span class="dt">Ops standup — May 20</span><span class="dd">Final</span></div><div class="db">3 action items. SLA review assigned Torres. KR1.2 mitigation plan Gupta.</div></div>
+        <div class="di"><div class="dh"><span class="dt">Dir. Reyes 1:1 — May 18</span><span class="dd">Final</span></div><div class="db">Headcount freeze impact. Two critical open roles. Escalating to president.</div></div>
+        <div class="di"><div class="dh"><span class="dt">Vendor selection working session — May 15</span><span class="dd">Open items</span></div><div class="db">Two vendors shortlisted. Legal review pending. Decision by May 28.</div></div>
+      </div>
+    </div>
+
+    <!-- STRATEGIC INITIATIVES -->
+    <div class="panel" id="panel-initiatives">
+      <div class="slbl">Strategic initiatives</div>
+      <div class="card">
+        <div class="ch"><i class="ti ti-rocket" style="color:var(--amber)"></i><span class="ct">Active initiatives</span><span class="ca">+ Add initiative</span></div>
+        <div class="di"><div class="dh"><span class="dt">Regional operating model review</span><span class="dd">Q3</span></div><div class="db">President-sponsored. OFE coordinating working group of 4 directors. Recommendation due Jul 15.</div><div class="ow"><span class="sc s-open">In progress</span><span class="chip">OFE lead</span><span class="chip">President-sponsored</span></div></div>
+        <div class="di"><div class="dh"><span class="dt">Q4 planning process design</span><span class="dd">Jun–Jul</span></div><div class="db">OFE owns design of Q4 planning timeline, templates, and facilitation. First design session Jun 15.</div><div class="ow"><span class="sc s-watch">Upcoming</span><span class="chip">OFE lead</span></div></div>
+        <div class="di"><div class="dh"><span class="dt">DBE / OFE integration framework</span><span class="dd">Ongoing</span></div><div class="db">Defining how DBE work connects to OFE strategic priorities — shared calendar, stakeholder map, joint reporting rhythm.</div><div class="ow"><span class="sc s-open">Defining</span><span class="chip">OFE + DBE</span></div></div>
+      </div>
+    </div>
+
+    <!-- OKRs -->
+    <div class="panel" id="panel-okrs">
+      <div class="slbl">OKRs</div>
+      <div class="card">
+        <div class="ch"><i class="ti ti-target" style="color:var(--teal)"></i><span class="ct">Q3 objectives</span></div>
+        <div class="di"><div class="dh"><span class="dt">O1 · Operational excellence</span><span class="dd" style="color:var(--teal);font-family:var(--mono);font-weight:600">71%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:71%;background:var(--teal)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR1.1 74% · KR1.2 68% at-risk · KR1.3 71%</div></div>
+        <div class="di"><div class="dh"><span class="dt">O2 · Associate engagement</span><span class="dd" style="color:var(--amber);font-family:var(--mono);font-weight:600">58%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:58%;background:var(--amber)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR2.1 63% · KR2.2 52% at-risk</div></div>
+        <div class="di"><div class="dh"><span class="dt">O3 · Stakeholder alignment</span><span class="dd" style="color:var(--coral);font-family:var(--mono)">55%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:55%;background:var(--coral)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR3.1 60% · KR3.2 48% behind</div></div>
+        <div class="di"><div class="dh"><span class="dt">O4 · Program execution</span><span class="dd" style="color:var(--teal);font-family:var(--mono);font-weight:600">77%</span></div><div class="okr-bar-bg" style="margin-top:5px"><div class="okr-bar-fill" style="width:77%;background:var(--blue)"></div></div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px">KR4.1 80% · KR4.2 75% · KR4.3 76%</div></div>
+      </div>
+    </div>
+
+    <!-- STAKEHOLDER MAP -->
+    <div class="panel" id="panel-stakeholders">
+      <div class="slbl">Stakeholder map</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-sitemap" style="color:var(--coral)"></i><span class="ct">Influence / interest matrix</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px"><span>← Low influence</span><span>High influence →</span></div>
+          <div class="sq-grid">
+            <div class="quadrant"><div class="quad-label">Manage closely</div><span class="s-pill"><span class="dot" style="background:var(--amber)"></span>Dir. Reyes</span><span class="s-pill"><span class="dot" style="background:var(--amber)"></span>VP Chen</span></div>
+            <div class="quadrant"><div class="quad-label">Key players</div><span class="s-pill"><span class="dot" style="background:var(--green)"></span>EVP Morris</span><span class="s-pill"><span class="dot" style="background:var(--green)"></span>CFO Walsh</span><span class="s-pill"><span class="dot" style="background:var(--green)"></span>Dir. Park</span></div>
+            <div class="quadrant"><div class="quad-label">Monitor</div><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>M. Torres</span><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>T. Gupta</span></div>
+            <div class="quadrant"><div class="quad-label">Keep informed</div><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>Reg. leads ×6</span><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>Comms team</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-family:var(--mono);margin-top:4px"><span>↑ Low interest</span><span>High interest ↑</span></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-notebook" style="color:var(--coral)"></i><span class="ct">Qualitative notes</span><span class="ca">+ Add note</span></div>
+          <div class="di"><div class="dh"><span class="dt">EVP Morris</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(15,118,110,0.1);color:var(--teal);font-family:var(--mono);font-weight:600">Aligned</span></div><div class="db">Strong sponsor. Wants weekly brief. Budget flexibility needed for Q4. Lead with numbers.</div></div>
+          <div class="di"><div class="dh"><span class="dt">Dir. Reyes</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(146,98,10,0.1);color:var(--amber);font-family:var(--mono);font-weight:600">Cautious</span></div><div class="db">Concerned about headcount freeze. Values directness. Loop in president if backfill exception needed.</div></div>
+          <div class="di"><div class="dh"><span class="dt">CFO Walsh</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(15,118,110,0.1);color:var(--teal);font-family:var(--mono);font-weight:600">Aligned</span></div><div class="db">Data-driven. Expects ROI framing. President's relationship — OFE preps and follows up.</div></div>
+          <div class="di"><div class="dh"><span class="dt">M. Torres</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(192,57,43,0.1);color:var(--coral);font-family:var(--mono);font-weight:600">Stretched</span></div><div class="db">Under pressure from SLA miss. Consider a concrete offer of support, not just a check-in.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGAGEMENT -->
+    <div class="panel" id="panel-engagement">
+      <div class="slbl">Engagement</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-chart-radar" style="color:var(--green)"></i><span class="ct">Pulse scores by team</span></div>
+          <div class="mrow">
+            <div class="met"><div class="mv" style="color:var(--teall)">84</div><div class="ml">Operations</div><div class="md up">↑ 2</div></div>
+            <div class="met"><div class="mv" style="color:var(--amberl)">76</div><div class="ml">Field teams</div><div class="md dn">↓ 4</div></div>
+            <div class="met"><div class="mv" style="color:var(--teall)">81</div><div class="ml">Programs</div><div class="md up">↑ 1</div></div>
+            <div class="met"><div class="mv" style="color:var(--coral)">68</div><div class="ml">Admin</div><div class="md dn">↓ 7</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-message-circle" style="color:var(--green)"></i><span class="ct">Qualitative signals</span><span class="ca">+ Add signal</span></div>
+          <div class="di"><div class="dh"><span class="dt">Admin team morale concern</span><span class="dd">May 21</span></div><div class="db">Three exit interview comments about role clarity. Theme connects to manager effectiveness gap.</div><div class="ow"><span class="sc s-flag">Flag</span><span class="chip">Admin</span></div></div>
+          <div class="di"><div class="dh"><span class="dt">Field recognition gap</span><span class="dd">May 16</span></div><div class="db">Field associates feel disconnected from mission. Opportunity for a visibility program.</div><div class="ow"><span class="sc s-watch">Watching</span><span class="chip">Field</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI SYNTHESIS -->
+    <div class="panel" id="panel-synthesis">
+      <div class="slbl">AI synthesis engine</div>
+      <div class="card">
+        <div class="ch"><i class="ti ti-sparkles" style="color:var(--amber)"></i><span class="ct">Cross-domain synthesis</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div class="action-btn">⚡ Weekly leadership readout ↗</div>
+          <div class="action-btn">⚡ Risk digest ↗</div>
+          <div class="action-btn">⚡ Alignment gaps ↗</div>
+          <div class="action-btn">⚡ What matters most this week ↗</div>
+          <div class="action-btn">⚡ OFE + DBE integration health ↗</div>
+          <div class="action-btn">⚡ Case for keeping DBE ↗</div>
+        </div>
+        <div class="ai-bar"><span class="ail">⚡ custom</span><input class="aii" placeholder="Ask anything across the OFE and DBE portfolio..." /><button class="aib">Run →</button></div>
+      </div>
+    </div>
+
+    <!-- WINS & IMPACT -->
+    <div class="panel" id="panel-wins">
+      <div class="slbl">Wins &amp; impact — Office of the Executive</div>
+      <div class="info-bar" style="background:rgba(146,98,10,0.07);border:1px solid rgba(146,98,10,0.2);color:var(--amber)">This log captures what the office shipped, influenced, and unblocked — across OFE and DBE. The shared evidence base for leadership readouts, annual reviews, and demonstrating the value of the office.</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-trophy" style="color:var(--amber)"></i><span class="ct">Impact log</span><span class="ca">+ Log win</span></div>
+          <div class="win-item"><div class="wh"><span class="wt">Vendor decision unblocked</span><span class="wd">May 20</span></div><div class="wb">Facilitated alignment between legal and operations. Decision 3 days ahead of deadline, saving ~2 weeks of delay.</div><div class="ow"><span class="wtag wt-ofe">OFE</span><span class="chip">Influence</span><span class="chip">Risk mitigation</span></div></div>
+          <div class="win-item"><div class="wh"><span class="wt">Mentorship cohort launched</span><span class="wd">May 15</span></div><div class="wb">24 associates enrolled, 3 regions. First session: 4.7/5. Demand exceeding capacity.</div><div class="ow"><span class="wtag wt-dbe">DBE</span><span class="chip">Delivery</span></div></div>
+          <div class="win-item"><div class="wh"><span class="wt">Town hall remarks delivered</span><span class="wd">May 10</span></div><div class="wb">Drafted remarks used verbatim by president. Credited in three subsequent director conversations.</div><div class="ow"><span class="wtag wt-comms">Comms</span><span class="chip">200+ audience</span></div></div>
+          <div class="win-item"><div class="wh"><span class="wt">Midwest SLA escalation contained</span><span class="wd">May 6</span></div><div class="wb">Identified issue before it surfaced to president. Resolved in 72 hours. Silent intervention.</div><div class="ow"><span class="wtag wt-ops">Operations</span><span class="chip">Silent intervention</span></div></div>
+          <div class="win-item"><div class="wh"><span class="wt">Culture listening tour — 4 regions</span><span class="wd">Apr 28</span></div><div class="wb">Completed 4 of 5 sessions. Role clarity and recognition identified as systemic themes.</div><div class="ow"><span class="wtag wt-dbe">DBE</span><span class="wtag wt-culture">Culture</span></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-sparkles" style="color:var(--amber)"></i><span class="ct">AI narrative builder</span></div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:12px;line-height:1.6">Turn the impact log into a leadership-ready narrative — for quarterly reviews, board updates, or making the case for the office's value.</div>
+          <div class="action-row">
+            <div class="action-btn">⚡ Quarterly impact summary ↗</div>
+            <div class="action-btn">⚡ Office value narrative ↗</div>
+            <div class="action-btn">⚡ Where the office creates most value ↗</div>
+            <div class="action-btn">⚡ Annual office brief ↗</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATIONSHIP HEALTH -->
+    <div class="panel" id="panel-relationships">
+      <div class="slbl">Relationship health — President's office</div>
+      <div class="info-bar" style="background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.2);color:var(--coral)">Tracks relationships the office is responsible for tending. Labeled by owner so it's always clear who should act.</div>
+      <div style="display:flex;gap:12px;margin-bottom:4px;font-size:11px;font-family:var(--mono)">
+        <span style="display:flex;align-items:center;gap:5px"><span class="own-badge own-pres">President</span>his to tend</span>
+        <span style="display:flex;align-items:center;gap:5px"><span class="own-badge own-ofe">OFE</span>yours to manage</span>
+        <span style="display:flex;align-items:center;gap:5px"><span class="own-badge own-shared">Shared</span>coordinate together</span>
+      </div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-heart-handshake" style="color:var(--coral)"></i><span class="ct">Connection cadence</span><span class="ca">+ Add contact</span></div>
+          <div style="font-size:10px;font-family:var(--mono);color:var(--coral);font-weight:600;padding:5px 0 3px;text-transform:uppercase;letter-spacing:.08em">Overdue</div>
+          <div class="rel-item"><div class="rel-av" style="background:rgba(192,57,43,0.12);color:var(--coral)">ER</div><div style="flex:1"><div class="rel-name">Dir. Reyes</div><div class="rel-role">Regional Operations · monthly</div></div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="own-badge own-shared">Shared</span><div class="rel-last rel-ov">38 days</div><span class="am">⚡ Draft outreach</span></div></div>
+          <div class="rel-item"><div class="rel-av" style="background:rgba(192,57,43,0.12);color:var(--coral)">MT</div><div style="flex:1"><div class="rel-name">M. Torres</div><div class="rel-role">Field Operations · monthly</div></div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="own-badge own-ofe">OFE</span><div class="rel-last rel-ov">45 days</div><span class="am">⚡ Draft outreach</span></div></div>
+          <div style="font-size:10px;font-family:var(--mono);color:var(--amberl);padding:10px 0 3px;text-transform:uppercase;letter-spacing:.08em">Due soon</div>
+          <div class="rel-item"><div class="rel-av" style="background:rgba(146,98,10,0.12);color:var(--amber)">VC</div><div style="flex:1"><div class="rel-name">VP Chen</div><div class="rel-role">Associate Experience · bi-weekly</div></div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="own-badge own-pres">President</span><div class="rel-last rel-soon">22 days</div><span class="am">⚡ Flag for president</span></div></div>
+          <div class="rel-item"><div class="rel-av" style="background:rgba(146,98,10,0.12);color:var(--amber)">CW</div><div style="flex:1"><div class="rel-name">CFO Walsh</div><div class="rel-role">Finance · monthly</div></div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="own-badge own-pres">President</span><div class="rel-last rel-soon">19 days</div><span class="am">⚡ Prep brief</span></div></div>
+          <div style="font-size:10px;font-family:var(--mono);color:var(--teal);font-weight:600;padding:10px 0 3px;text-transform:uppercase;letter-spacing:.08em">In good shape</div>
+          <div class="rel-item"><div class="rel-av" style="background:var(--tealbg);color:var(--teal)">EM</div><div style="flex:1"><div class="rel-name">EVP Morris</div><div class="rel-role">Division Executive · weekly</div></div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="own-badge own-shared">Shared</span><div class="rel-last rel-ok">6 days</div></div></div>
+          <div class="rel-item"><div class="rel-av" style="background:var(--tealbg);color:var(--teal)">DP</div><div style="flex:1"><div class="rel-name">Dir. Park</div><div class="rel-role">Programs · bi-weekly</div></div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="own-badge own-ofe">OFE</span><div class="rel-last rel-ok">11 days</div></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-notebook" style="color:var(--coral)"></i><span class="ct">Relationship notes</span><span class="ca">+ Add note</span></div>
+          <div class="di"><div class="dh"><span class="dt">EVP Morris</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(15,118,110,0.1);color:var(--teal);font-family:var(--mono);font-weight:600">Aligned</span></div><div class="db">Strong sponsor. Wants weekly brief. Budget flexibility needed for Q4. Lead with numbers.</div></div>
+          <div class="di"><div class="dh"><span class="dt">Dir. Reyes</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(146,98,10,0.1);color:var(--amber);font-family:var(--mono);font-weight:600">Cautious</span></div><div class="db">Concerned about headcount freeze. Values directness. Loop in president if backfill exception needed.</div></div>
+          <div class="di"><div class="dh"><span class="dt">CFO Walsh</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(15,118,110,0.1);color:var(--teal);font-family:var(--mono);font-weight:600">Aligned</span></div><div class="db">Data-driven. Expects ROI framing. President's relationship — OFE preps and follows up.</div></div>
+          <div class="di"><div class="dh"><span class="dt">M. Torres</span><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(192,57,43,0.1);color:var(--coral);font-family:var(--mono);font-weight:600">Stretched</span></div><div class="db">Under pressure from SLA miss. Consider a concrete offer of support, not just a check-in.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OFFICE MOMENTUM -->
+    <div class="panel" id="panel-momentum">
+      <div class="slbl">Office momentum</div>
+      <div class="info-bar" style="background:rgba(59,110,168,0.07);border:1px solid rgba(59,110,168,0.2);color:var(--blue)">A pulse on how well the office is operating as a machine — not what you're working on, but how effectively things are moving.</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-activity" style="color:var(--blue)"></i><span class="ct">Operational health signals</span></div>
+          <div class="di"><div class="dh"><span class="dt">Decision velocity</span><span class="sc s-closed">Healthy</span></div><div class="db">9 decisions this month. 7 closed, 2 open. Avg close 4.2 days — faster than last quarter.</div></div>
+          <div class="di"><div class="dh"><span class="dt">Action item conversion</span><span class="sc s-open">Watch</span></div><div class="db">31 items from 14 meetings. 22 closed (71%). 4 overdue: Torres, Gupta, Reyes, Park.</div></div>
+          <div class="di"><div class="dh"><span class="dt">Open items aging</span><span class="sc s-esc">Flag</span></div><div class="db">3 items over 14 days. Oldest: KR2.2 revision at 11 days. Decision nudge recommended.</div></div>
+          <div class="di"><div class="dh"><span class="dt">Meeting prep coverage</span><span class="sc s-closed">Good</span></div><div class="db">Briefing cards done for 8 of 9 this-week meetings. Gap: partner org board Jul 8.</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-sparkles" style="color:var(--blue)"></i><span class="ct">Momentum synthesis</span></div>
+          <div class="action-row">
+            <div class="action-btn">⚡ Clear the backlog this week ↗</div>
+            <div class="action-btn">⚡ Draft decision nudge ↗</div>
+            <div class="action-btn">⚡ Diagnose conversion patterns ↗</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DBE PROGRAMS -->
+    <div class="panel" id="panel-programs">
+      <div class="slbl">DBE programs</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-layout-grid" style="color:var(--purple)"></i><span class="ct">Active programs</span><span class="ca">+ Add program</span></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n" style="font-size:13px">Associate mentorship cohort</span><span class="prog-p">65%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:65%;background:var(--purple)"></div></div><div class="prog-m">24 enrolled · Session 3 of 6 · Next: Jun 3 · Lead: OFE</div><div class="ow"><span class="sc s-closed">On track</span><span class="chip">Mentorship</span><span class="chip">3 regions</span></div></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n" style="font-size:13px">Leadership development series</span><span class="prog-p">40%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:40%;background:var(--teal)"></div></div><div class="prog-m">18 enrolled · Module 2 of 5 · Lead: VP Chen</div><div class="ow"><span class="sc s-closed">On track</span><span class="chip">Leadership</span></div></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n" style="font-size:13px">Culture listening tour</span><span class="prog-p">80%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:80%;background:var(--amber)"></div></div><div class="prog-m">4 of 5 regions · Report due Jun 10 · Lead: OFE</div><div class="ow"><span class="sc s-open">Deadline soon</span><span class="chip">Culture</span></div></div>
+          <div class="prog-item"><div class="prog-h"><span class="prog-n" style="font-size:13px">Manager effectiveness workshop</span><span class="prog-p">20%</span></div><div class="okr-bar-bg"><div class="okr-bar-fill" style="width:20%;background:var(--blue)"></div></div><div class="prog-m">Planning phase · Launch Jul 1 · Lead: Dir. Reyes</div><div class="ow"><span class="sc s-watch">Planning</span><span class="chip">Manager dev</span></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-chart-bar" style="color:var(--purple)"></i><span class="ct">Program impact</span></div>
+          <div class="mrow" style="grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+            <div class="met"><div class="mv" style="color:var(--purple)">84</div><div class="ml">Associates reached</div></div>
+            <div class="met"><div class="mv" style="color:var(--purple)">4.6</div><div class="ml">Avg satisfaction</div></div>
+            <div class="met"><div class="mv" style="color:var(--purple)">4</div><div class="ml">Active programs</div></div>
+            <div class="met"><div class="mv" style="color:var(--purple)">3</div><div class="ml">Regions covered</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMUNITY PULSE -->
+    <div class="panel" id="panel-community">
+      <div class="slbl">Community pulse</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-users" style="color:var(--pink)"></i><span class="ct">Qualitative signals</span><span class="ca">+ Add signal</span></div>
+          <div class="di"><div class="dh"><span class="dt">Role clarity — admin team</span><span class="dd">May 21</span></div><div class="db">Three exit interview comments about unclear expectations. Theme connects to manager effectiveness gap.</div><div class="ow"><span class="sc s-flag">Flag</span><span class="chip">Admin</span><span class="chip">Systemic</span></div></div>
+          <div class="di"><div class="dh"><span class="dt">Field associate recognition gap</span><span class="dd">May 16</span></div><div class="db">"We only hear from leadership when something is wrong." Associates feel disconnected from mission.</div><div class="ow"><span class="sc s-watch">Watching</span><span class="chip">Field</span></div></div>
+          <div class="di"><div class="dh"><span class="dt">Mentorship cohort — energy high</span><span class="dd">May 15</span></div><div class="db">"The one hour a week I actually feel seen." Strong demand for expansion.</div><div class="ow"><span class="sc s-pos">Positive</span><span class="chip">Mentorship</span></div></div>
+          <div class="di"><div class="dh"><span class="dt">Manager frustration — comms gap</span><span class="dd">May 10</span></div><div class="db">Multiple managers raising headcount freeze through different channels. Signals a trust gap in downward communication.</div><div class="ow"><span class="sc s-flag">Flag</span><span class="chip">Managers</span><span class="chip">Trust</span></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-sparkles" style="color:var(--pink)"></i><span class="ct">Theme synthesis</span></div>
+          <div class="action-row">
+            <div class="action-btn">⚡ Synthesize themes for president ↗</div>
+            <div class="action-btn">⚡ Culture brief for president ↗</div>
+            <div class="action-btn">⚡ Case to scale mentorship ↗</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPEAKING & EVENTS -->
+    <div class="panel" id="panel-speaking">
+      <div class="slbl">Speaking &amp; events — President's calendar</div>
+      <div class="two">
+        <div class="card">
+          <div class="ch"><i class="ti ti-microphone" style="color:var(--gold)"></i><span class="ct">Upcoming engagements</span><span class="ca">+ Add engagement</span></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--goldbg);color:var(--gold)"><i class="ti ti-microphone"></i></div><div style="flex:1"><div class="eng-title">Division all-hands keynote</div><div class="eng-meta">200+ associates · Remarks + Q&amp;A · Internal</div><span class="am">⚡ Draft remarks</span></div><div class="eng-date eng-urgent">Jun 3 · 11d</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--purplebg);color:var(--purple)"><i class="ti ti-users"></i></div><div style="flex:1"><div class="eng-title">DBE mentorship cohort — president's address</div><div class="eng-meta">24 associates · 15 min welcome + vision</div><span class="am">⚡ Draft welcome</span></div><div class="eng-date">Jun 3</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--bluebg);color:var(--blue)"><i class="ti ti-building"></i></div><div style="flex:1"><div class="eng-title">Regional leadership summit — panel</div><div class="eng-meta">External · 45 min · Chicago · 2 nights</div><span class="am">⚡ Panel prep</span></div><div class="eng-date">Jun 18</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--tealbg);color:var(--teal)"><i class="ti ti-handshake"></i></div><div style="flex:1"><div class="eng-title">Partner org board meeting</div><div class="eng-meta">Quarterly update · Report due Jun 30</div><span class="am">⚡ Draft update</span></div><div class="eng-date">Jul 8</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><i class="ti ti-file-text" style="color:var(--gold)"></i><span class="ct">Comms prep toolkit</span></div>
+          <div class="action-row">
+            <div class="action-btn">⚡ Define president's voice &amp; themes ↗</div>
+            <div class="action-btn">⚡ Pre-engagement brief template ↗</div>
+            <div class="action-btn">⚡ Q&amp;A anticipation — all-hands ↗</div>
+            <div class="action-btn">⚡ Post-engagement debrief ↗</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARTNER RELATIONSHIPS -->
+    <div class="panel" id="panel-partnerships">
+      <div class="slbl">External partnerships</div>
+      <div class="card">
+        <div class="ch"><i class="ti ti-world" style="color:var(--blue)"></i><span class="ct">Active partnerships &amp; commitments</span><span class="ca">+ Add partnership</span></div>
+        <div class="di"><div class="dh"><span class="dt">Regional HR network</span><span class="dd">Ongoing</span></div><div class="db">Monthly coordination with Midwest HR lead on engagement and culture initiatives. OFE owns day-to-day; president attends quarterly.</div><div class="ow"><span class="sc s-closed">Active</span><span class="chip">OFE lead</span><span class="chip">Monthly</span></div></div>
+        <div class="di"><div class="dh"><span class="dt">Partner org board seat</span><span class="dd">Quarterly</span></div><div class="db">President holds a board seat. Next meeting Jul 8. Report due Jun 30 — OFE drafts, president reviews.</div><div class="ow"><span class="sc s-open">Report due Jun 30</span><span class="chip">President lead</span><span class="chip">OFE prepares</span></div></div>
+        <div class="di"><div class="dh"><span class="dt">DBE annual outcomes report</span><span class="dd">Due Aug 1</span></div><div class="db">Annual program impact report for division leadership and external stakeholders. Early data collection underway.</div><div class="ow"><span class="sc s-watch">Planning</span><span class="chip">OFE + DBE</span></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const panels=['overview','capture','briefing','decisions','minutes','initiatives','okrs','stakeholders','engagement','synthesis','wins','relationships','momentum','programs','community','speaking','partnerships'];
+function show(n){
+  panels.forEach(p=>{const e=document.getElementById('panel-'+p);if(e)e.classList.remove('active');});
+  const t=document.getElementById('panel-'+n);if(t)t.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(e=>{
+    e.classList.remove('active');
+    if(e.getAttribute('onclick')&&e.getAttribute('onclick').includes("'"+n+"'"))e.classList.add('active');
+  });
+}
+document.getElementById('topbar-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+</script>
+</body>
+</html>
