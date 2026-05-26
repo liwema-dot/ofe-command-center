@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -137,6 +138,72 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
 .form-ta::placeholder{color:var(--t3)}
 .fsub{background:#1e293b;color:#fff;border:none;border-radius:5px;padding:7px 14px;font-size:11px;font-family:var(--mono);cursor:pointer;font-weight:600}
 .fsub:hover{background:var(--amber)}
+
+/* ── MUST WIN ACQUISITIONS ── */
+.acq-pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.acq-stage{background:var(--bg2);border:1px solid var(--bg3);border-radius:6px;padding:10px;text-align:center}
+.acq-stage-count{font-size:22px;font-family:var(--mono);font-weight:600;line-height:1}
+.acq-stage-label{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.acq-card{background:var(--bg1);border:1px solid var(--bg3);border-radius:8px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid var(--bg3)}
+.acq-card.pursuing{border-left-color:var(--blue)}
+.acq-card.proposal{border-left-color:var(--amber)}
+.acq-card.negotiation{border-left-color:var(--purple)}
+.acq-card.closed-won{border-left-color:var(--teal)}
+.acq-card.closed-lost{border-left-color:var(--t3)}
+.acq-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:10px}
+.acq-name{font-size:14px;color:var(--t1);font-weight:600}
+.acq-status{font-size:10px;font-family:var(--mono);font-weight:600;border-radius:10px;padding:3px 9px;white-space:nowrap}
+.status-pursuing{background:rgba(59,110,168,0.12);color:var(--blue)}
+.status-proposal{background:rgba(146,98,10,0.12);color:var(--amber)}
+.status-negotiation{background:rgba(123,63,110,0.12);color:var(--purple)}
+.status-won{background:rgba(15,118,110,0.12);color:var(--teal)}
+.status-lost{background:rgba(0,0,0,0.07);color:var(--t3)}
+.acq-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.acq-field{background:var(--bg2);border-radius:5px;padding:8px 10px}
+.acq-field-label{font-size:9px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.acq-field-value{font-size:11px;color:var(--t1);line-height:1.4}
+.acq-contacts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.acq-contact{background:var(--bg2);border-radius:5px;padding:8px 10px}
+.acq-contact-label{font-size:9px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.acq-contact-value{font-size:11px;color:var(--t1)}
+.acq-footer{display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid var(--bg3)}
+.acq-next{font-size:11px;color:var(--t2);flex:1}
+.acq-next-label{font-size:9px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.acq-close{font-size:10px;font-family:var(--mono);color:var(--t3);white-space:nowrap}
+.likert-row-acq{display:flex;align-items:center;gap:6px}
+.likert-acq-label{font-size:9px;color:var(--t3);font-family:var(--mono);margin-right:2px}
+.likert-pip{width:14px;height:14px;border-radius:3px;border:1px solid var(--bg3);background:var(--bg3);cursor:pointer;flex-shrink:0;transition:background .1s}
+.lp-1.filled{background:var(--coral);border-color:var(--coral)}
+.lp-2.filled{background:var(--amber);border-color:var(--amber)}
+.lp-3.filled{background:var(--amber);border-color:var(--amber)}
+.lp-4.filled{background:var(--teal);border-color:var(--teal)}
+.lp-5.filled{background:var(--teal);border-color:var(--teal)}
+.add-acq-btn{background:var(--bg2);border:1px dashed var(--bg3);border-radius:8px;padding:14px;text-align:center;cursor:pointer;color:var(--t3);font-size:12px;font-family:var(--mono);transition:all .15s}
+.add-acq-btn:hover{border-color:var(--amber);color:var(--amber);background:var(--amberbg)}
+
+/* ── TEMPLATES ── */
+.template-body{display:none}
+.template-body.active{display:block}
+.form-section{margin-bottom:18px}
+.form-section-title{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--t2);font-family:var(--mono);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bg3)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px}
+.form-label{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.form-select{background:var(--bg2);border:1px solid var(--bg3);border-radius:5px;padding:7px 10px;color:var(--t1);font-family:var(--mono);font-size:12px;outline:none;width:100%;transition:border-color .12s}
+.form-select:focus{border-color:var(--amber)}
+.mbr-section{background:var(--bg2);border-radius:6px;padding:12px;margin-bottom:10px;border-left:3px solid var(--bg3)}
+.mbr-section.ops{border-left-color:var(--teal)}
+.mbr-section.engagement{border-left-color:var(--amber)}
+.mbr-section.dbe{border-left-color:var(--purple)}
+.mbr-section.external{border-left-color:var(--blue)}
+.mbr-section-title{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono);font-weight:600;margin-bottom:6px}
+.mbr-section.ops .mbr-section-title{color:var(--teal)}
+.mbr-section.engagement .mbr-section-title{color:var(--amber)}
+.mbr-section.dbe .mbr-section-title{color:var(--purple)}
+.mbr-section.external .mbr-section-title{color:var(--blue)}
+.form-submit-row{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--bg3)}
+.btn-secondary{background:var(--bg2);color:var(--t2);border:1px solid var(--bg3);border-radius:5px;padding:7px 14px;font-size:11px;font-family:var(--mono);cursor:pointer;font-weight:500}
+.btn-secondary:hover{border-color:var(--amber);color:var(--amber)}
 </style>
 </head>
 <body>
@@ -160,6 +227,7 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
 
     <div class="nav-section">Cross-cutting</div>
     <div class="nav-item" onclick="show('okrs')"><i class="ti ti-target"></i> OKRs</div>
+    <div class="nav-item" onclick="show('acquisitions')"><i class="ti ti-briefcase"></i> Must win acquisitions</div>
     <div class="nav-item" onclick="show('stakeholders')"><i class="ti ti-sitemap"></i> Stakeholder map</div>
     <div class="nav-item" onclick="show('engagement')"><i class="ti ti-chart-radar"></i> Engagement</div>
     <div class="nav-item" onclick="show('synthesis')"><i class="ti ti-sparkles"></i> AI synthesis</div>
@@ -176,6 +244,9 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
     <div class="nav-section">External partnerships</div>
     <div class="nav-item" onclick="show('speaking')"><i class="ti ti-microphone"></i> Speaking &amp; events</div>
     <div class="nav-item" onclick="show('partnerships')"><i class="ti ti-world"></i> Partner relationships</div>
+
+    <div class="nav-section">Templates</div>
+    <div class="nav-item" onclick="show('templates')"><i class="ti ti-template"></i> Intake form</div>
   </div>
 
   <div class="main">
@@ -572,11 +643,297 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
       </div>
     </div>
 
+
+    <!-- MUST WIN ACQUISITIONS -->
+    <div class="panel" id="panel-acquisitions">
+      <div class="slbl">Must win acquisitions</div>
+
+      <!-- Pipeline summary -->
+      <div class="acq-pipeline">
+        <div class="acq-stage" style="border-top:3px solid var(--blue)">
+          <div class="acq-stage-count" style="color:var(--blue)">3</div>
+          <div class="acq-stage-label">Pursuing</div>
+        </div>
+        <div class="acq-stage" style="border-top:3px solid var(--amber)">
+          <div class="acq-stage-count" style="color:var(--amber)">2</div>
+          <div class="acq-stage-label">Proposal</div>
+        </div>
+        <div class="acq-stage" style="border-top:3px solid var(--purple)">
+          <div class="acq-stage-count" style="color:var(--purple)">1</div>
+          <div class="acq-stage-label">Negotiation</div>
+        </div>
+        <div class="acq-stage" style="border-top:3px solid var(--teal)">
+          <div class="acq-stage-count" style="color:var(--teal)">2</div>
+          <div class="acq-stage-label">Closed won</div>
+        </div>
+        <div class="acq-stage" style="border-top:3px solid var(--t3)">
+          <div class="acq-stage-count" style="color:var(--t3)">1</div>
+          <div class="acq-stage-label">Closed lost</div>
+        </div>
+      </div>
+
+      <!-- Acquisition 1 -->
+      <div class="acq-card negotiation">
+        <div class="acq-header">
+          <div class="acq-name">Midwest Regional Operations Contract</div>
+          <span class="acq-status status-negotiation">Negotiation</span>
+        </div>
+        <div class="acq-grid">
+          <div class="acq-field">
+            <div class="acq-field-label">What's at stake</div>
+            <div class="acq-field-value">$4.2M annual contract · 3-yr term · 120 associates impacted</div>
+          </div>
+          <div class="acq-field">
+            <div class="acq-field-label">Target close date</div>
+            <div class="acq-field-value" style="color:var(--coral);font-weight:600">Jun 28, 2026</div>
+          </div>
+          <div class="acq-field">
+            <div class="acq-field-label">Confidence</div>
+            <div class="likert-row-acq" style="margin-top:2px">
+              <span class="likert-acq-label">Low</span>
+              <div class="likert-pip lp-1 filled"></div>
+              <div class="likert-pip lp-2 filled"></div>
+              <div class="likert-pip lp-3 filled"></div>
+              <div class="likert-pip lp-4 filled"></div>
+              <div class="likert-pip lp-5"></div>
+              <span class="likert-acq-label">High</span>
+            </div>
+          </div>
+        </div>
+        <div class="acq-contacts">
+          <div class="acq-contact">
+            <div class="acq-contact-label">Sales lead</div>
+            <div class="acq-contact-value">J. Alvarez · jalvarez@co.com</div>
+          </div>
+          <div class="acq-contact">
+            <div class="acq-contact-label">Technical lead</div>
+            <div class="acq-contact-value">R. Patel · rpatel@co.com</div>
+          </div>
+          <div class="acq-contact">
+            <div class="acq-contact-label">Other contacts</div>
+            <div class="acq-contact-value">Client: D. Huang (Procurement)</div>
+          </div>
+        </div>
+        <div class="acq-footer">
+          <div class="acq-next">
+            <div class="acq-next-label">Next action</div>
+            Final contract redline review · Legal call Jun 10 · Owner: J. Alvarez
+          </div>
+          <div class="acq-close">Close: Jun 28</div>
+        </div>
+      </div>
+
+      <!-- Acquisition 2 -->
+      <div class="acq-card proposal">
+        <div class="acq-header">
+          <div class="acq-name">Healthcare Systems Leadership Program</div>
+          <span class="acq-status status-proposal">Proposal</span>
+        </div>
+        <div class="acq-grid">
+          <div class="acq-field">
+            <div class="acq-field-label">What's at stake</div>
+            <div class="acq-field-value">$1.8M · New sector entry · Strategic partnership potential</div>
+          </div>
+          <div class="acq-field">
+            <div class="acq-field-label">Target close date</div>
+            <div class="acq-field-value" style="color:var(--amber);font-weight:600">Jul 15, 2026</div>
+          </div>
+          <div class="acq-field">
+            <div class="acq-field-label">Confidence</div>
+            <div class="likert-row-acq" style="margin-top:2px">
+              <span class="likert-acq-label">Low</span>
+              <div class="likert-pip lp-1 filled"></div>
+              <div class="likert-pip lp-2 filled"></div>
+              <div class="likert-pip lp-3 filled"></div>
+              <div class="likert-pip lp-4"></div>
+              <div class="likert-pip lp-5"></div>
+              <span class="likert-acq-label">High</span>
+            </div>
+          </div>
+        </div>
+        <div class="acq-contacts">
+          <div class="acq-contact">
+            <div class="acq-contact-label">Sales lead</div>
+            <div class="acq-contact-value">M. Chen · mchen@co.com</div>
+          </div>
+          <div class="acq-contact">
+            <div class="acq-contact-label">Technical lead</div>
+            <div class="acq-contact-value">S. Brooks · sbrooks@co.com</div>
+          </div>
+          <div class="acq-contact">
+            <div class="acq-contact-label">Other contacts</div>
+            <div class="acq-contact-value">Client: V. Okonkwo (COO), T. Singh (CFO)</div>
+          </div>
+        </div>
+        <div class="acq-footer">
+          <div class="acq-next">
+            <div class="acq-next-label">Next action</div>
+            Submit revised proposal with updated pricing · Owner: M. Chen · Due Jun 7
+          </div>
+          <div class="acq-close">Close: Jul 15</div>
+        </div>
+      </div>
+
+      <!-- Acquisition 3 -->
+      <div class="acq-card pursuing">
+        <div class="acq-header">
+          <div class="acq-name">State Agency Workforce Development RFP</div>
+          <span class="acq-status status-pursuing">Pursuing</span>
+        </div>
+        <div class="acq-grid">
+          <div class="acq-field">
+            <div class="acq-field-label">What's at stake</div>
+            <div class="acq-field-value">$6.5M · Multi-year · Public sector foothold</div>
+          </div>
+          <div class="acq-field">
+            <div class="acq-field-label">Target close date</div>
+            <div class="acq-field-value">Sep 1, 2026</div>
+          </div>
+          <div class="acq-field">
+            <div class="acq-field-label">Confidence</div>
+            <div class="likert-row-acq" style="margin-top:2px">
+              <span class="likert-acq-label">Low</span>
+              <div class="likert-pip lp-1 filled"></div>
+              <div class="likert-pip lp-2 filled"></div>
+              <div class="likert-pip lp-3"></div>
+              <div class="likert-pip lp-4"></div>
+              <div class="likert-pip lp-5"></div>
+              <span class="likert-acq-label">High</span>
+            </div>
+          </div>
+        </div>
+        <div class="acq-contacts">
+          <div class="acq-contact">
+            <div class="acq-contact-label">Sales lead</div>
+            <div class="acq-contact-value">J. Alvarez · jalvarez@co.com</div>
+          </div>
+          <div class="acq-contact">
+            <div class="acq-contact-label">Technical lead</div>
+            <div class="acq-contact-value">TBD — assigning by Jun 15</div>
+          </div>
+          <div class="acq-contact">
+            <div class="acq-contact-label">Other contacts</div>
+            <div class="acq-contact-value">RFP contact: procurement@state.gov</div>
+          </div>
+        </div>
+        <div class="acq-footer">
+          <div class="acq-next">
+            <div class="acq-next-label">Next action</div>
+            Attend pre-bid conference Jun 12 · Assign technical lead · Owner: J. Alvarez
+          </div>
+          <div class="acq-close">Close: Sep 1</div>
+        </div>
+      </div>
+
+      <div class="add-acq-btn" onclick="alert('Add acquisition form — connect to storage to enable.')">+ Add acquisition</div>
+
+      <div class="ai-bar">
+        <span class="ail">⚡ synthesize</span>
+        <input class="aii" placeholder="Which acquisitions need attention? / Draft a pipeline summary for the president / Identify at-risk deals..." />
+        <button class="aib" onclick="alert('Connect to Claude API to enable synthesis.')">Run →</button>
+      </div>
+    </div>
+
+
+    <!-- TEMPLATES -->
+    <div class="panel" id="panel-templates">
+      <div class="slbl">Templates</div>
+
+      <div class="template-body active" id="tmpl-intake">
+        <div class="card">
+          <div class="ch"><i class="ti ti-inbox" style="color:var(--amber)"></i><span class="ct">New request — Office of the Executive</span></div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:14px;line-height:1.6">Use this form to submit a new request to the president's office. All fields marked with an asterisk are required. Expect a response within 2 business days.</div>
+
+          <div class="form-section">
+            <div class="form-section-title">Requestor information</div>
+            <div class="form-row-2">
+              <div><div class="form-label">Full name *</div><input class="form-input" placeholder="e.g. Maria Torres" /></div>
+              <div><div class="form-label">Title &amp; department *</div><input class="form-input" placeholder="e.g. Director, Field Operations" /></div>
+            </div>
+            <div class="form-row-2">
+              <div><div class="form-label">Email *</div><input class="form-input" type="email" placeholder="e.g. m.torres@org.com" /></div>
+              <div><div class="form-label">Date of request</div><input class="form-input" type="date" /></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Request details</div>
+            <div class="form-row-2">
+              <div>
+                <div class="form-label">Request type *</div>
+                <select class="form-select">
+                  <option value="">Select type...</option>
+                  <option>Executive decision / approval</option>
+                  <option>Meeting with the president</option>
+                  <option>Strategic guidance</option>
+                  <option>Resource / budget ask</option>
+                  <option>Communications support</option>
+                  <option>DBE program request</option>
+                  <option>Cross-functional coordination</option>
+                  <option>Information / data request</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <div class="form-label">Urgency *</div>
+                <select class="form-select">
+                  <option value="">Select urgency...</option>
+                  <option>Urgent — needed within 48 hours</option>
+                  <option>High — needed within 1 week</option>
+                  <option>Standard — needed within 2 weeks</option>
+                  <option>Low — flexible timeline</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-bottom:8px">
+              <div class="form-label">Request summary *</div>
+              <input class="form-input" placeholder="One sentence: what are you asking for?" />
+            </div>
+            <div style="margin-bottom:8px">
+              <div class="form-label">Context &amp; background</div>
+              <textarea class="form-ta" rows="3" placeholder="What is driving this request? What have you already tried or explored?"></textarea>
+            </div>
+            <div style="margin-bottom:8px">
+              <div class="form-label">Desired outcome *</div>
+              <textarea class="form-ta" rows="2" placeholder="What does success look like? What decision or action are you hoping results from this?"></textarea>
+            </div>
+            <div class="form-row-2">
+              <div><div class="form-label">Deadline or key date</div><input class="form-input" type="date" /></div>
+              <div>
+                <div class="form-label">Who else is involved?</div>
+                <input class="form-input" placeholder="e.g. CFO Walsh, Dir. Park" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Additional context</div>
+            <div style="margin-bottom:8px">
+              <div class="form-label">Supporting information / links</div>
+              <textarea class="form-ta" rows="2" placeholder="Any documents, data, or context the office should review before responding?"></textarea>
+            </div>
+            <div>
+              <div class="form-label">Anything else?</div>
+              <textarea class="form-ta" rows="2" placeholder="Sensitivities, constraints, or anything else the president's office should know..."></textarea>
+            </div>
+          </div>
+
+          <div class="form-submit-row">
+            <button class="fsub" onclick="alert('Form submission — connect to storage to enable.')">Submit request</button>
+            <button class="btn-secondary" onclick="alert('Saved as draft.')">Save draft</button>
+            <button class="btn-secondary" onclick="alert('Form cleared.')">Clear form</button>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
-const panels=['overview','capture','briefing','decisions','minutes','initiatives','okrs','stakeholders','engagement','synthesis','wins','relationships','momentum','programs','community','speaking','partnerships'];
+const panels=['overview','capture','briefing','decisions','minutes','initiatives','okrs','acquisitions','stakeholders','engagement','synthesis','wins','relationships','momentum','programs','community','speaking','partnerships','templates'];
 function show(n){
   panels.forEach(p=>{const e=document.getElementById('panel-'+p);if(e)e.classList.remove('active');});
   const t=document.getElementById('panel-'+n);if(t)t.classList.add('active');
@@ -586,6 +943,7 @@ function show(n){
   });
 }
 document.getElementById('topbar-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
 </script>
 </body>
 </html>
