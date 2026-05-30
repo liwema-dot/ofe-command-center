@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OFE Command Center</title>
+<title>OFE Dashboard</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -204,6 +204,17 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
 .form-submit-row{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--bg3)}
 .btn-secondary{background:var(--bg2);color:var(--t2);border:1px solid var(--bg3);border-radius:5px;padding:7px 14px;font-size:11px;font-family:var(--mono);cursor:pointer;font-weight:500}
 .btn-secondary:hover{border-color:var(--amber);color:var(--amber)}
+
+/* ── MEETING MINUTES FORM ── */
+.minutes-list{display:block}
+.minutes-form{display:none}
+.minutes-form.visible{display:block}
+.minutes-list.hidden{display:none}
+.form-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bg3)}
+.form-section-header-title{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--t2);font-family:var(--mono)}
+.minutes-entry{background:var(--bg2);border-radius:5px;padding:8px 10px;margin-bottom:6px;border-left:3px solid var(--blue)}
+.minutes-entry-header{font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:4px;display:flex;justify-content:space-between}
+.minutes-entry-body{font-size:12px;color:var(--t1)}
 </style>
 </head>
 <body>
@@ -211,7 +222,7 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
 <div class="shell">
   <div class="topbar">
     <div class="pulse"></div>
-    <span class="topbar-title">OFE Command Center</span>
+    <span class="topbar-title">OFE Dashboard</span>
     <span class="topbar-date" id="topbar-date"></span>
   </div>
 
@@ -229,7 +240,6 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
     <div class="nav-item" onclick="show('okrs')"><i class="ti ti-target"></i> OKRs</div>
     <div class="nav-item" onclick="show('acquisitions')"><i class="ti ti-briefcase"></i> Must win acquisitions</div>
     <div class="nav-item" onclick="show('stakeholders')"><i class="ti ti-sitemap"></i> Stakeholder map</div>
-    <div class="nav-item" onclick="show('engagement')"><i class="ti ti-chart-radar"></i> Engagement</div>
     <div class="nav-item" onclick="show('synthesis')"><i class="ti ti-sparkles"></i> AI synthesis</div>
 
     <div class="nav-section">OFE · Office health</div>
@@ -279,9 +289,9 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
       <div class="two">
         <div class="card">
           <div class="ch"><i class="ti ti-microphone" style="color:var(--gold)"></i><span class="ct">Upcoming engagements</span><span class="ca" onclick="show('speaking')">All →</span></div>
-          <div class="eng-item"><div class="eng-icon" style="background:var(--goldbg);color:var(--gold)"><i class="ti ti-microphone"></i></div><div style="flex:1"><div class="eng-title">Division all-hands keynote</div><div class="eng-meta">200+ associates · Remarks + Q&amp;A</div><span class="am">⚡ Draft remarks</span></div><div class="eng-date eng-urgent">Jun 3 · 11d</div></div>
-          <div class="eng-item"><div class="eng-icon" style="background:var(--bluebg);color:var(--blue)"><i class="ti ti-building"></i></div><div style="flex:1"><div class="eng-title">Regional leadership summit — panel</div><div class="eng-meta">External · 45 min · Chicago</div></div><div class="eng-date">Jun 18</div></div>
-          <div class="eng-item"><div class="eng-icon" style="background:var(--tealbg);color:var(--teal)"><i class="ti ti-handshake"></i></div><div style="flex:1"><div class="eng-title">Partner org board meeting</div><div class="eng-meta">Quarterly update · Report due Jun 30</div></div><div class="eng-date">Jul 8</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--bluebg);color:var(--blue)"><i class="ti ti-building"></i></div><div style="flex:1"><div class="eng-title">National Workforce Development Conf. — keynote</div><div class="eng-meta">External · Main stage · 800+ · Denver</div><span class="am">⚡ Draft keynote</span></div><div class="eng-date eng-urgent">Jun 10 · 4d</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--goldbg);color:var(--gold)"><i class="ti ti-microphone"></i></div><div style="flex:1"><div class="eng-title">Regional leadership summit — panel</div><div class="eng-meta">External · 45 min · Chicago</div></div><div class="eng-date">Jun 18</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--tealbg);color:var(--teal)"><i class="ti ti-handshake"></i></div><div style="flex:1"><div class="eng-title">Partner org board meeting</div><div class="eng-meta">External board · Report due Jun 30</div></div><div class="eng-date">Jul 8</div></div>
         </div>
         <div class="card">
           <div class="ch"><i class="ti ti-antenna" style="color:var(--blue)"></i><span class="ct">Office momentum</span><span class="ca" onclick="show('momentum')">Full view →</span></div>
@@ -293,7 +303,7 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
 
       <div class="two">
         <div class="card">
-          <div class="ch"><i class="ti ti-chart-radar" style="color:var(--green)"></i><span class="ct">Engagement pulse</span><span class="ca" onclick="show('engagement')">Details →</span></div>
+          <div class="ch"><i class="ti ti-chart-radar" style="color:var(--green)"></i><span class="ct">Engagement pulse</span><span class="ca" onclick="show('community')">Details →</span></div>
           <div class="mrow" style="grid-template-columns:1fr 1fr;gap:8px">
             <div class="met"><div class="mv" style="font-size:20px;color:var(--teal)">84</div><div class="ml">Operations</div><div class="md up">↑ 2</div></div>
             <div class="met"><div class="mv" style="font-size:20px;color:var(--amber)">76</div><div class="ml">Field teams</div><div class="md dn">↓ 4</div></div>
@@ -389,11 +399,59 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
     <!-- MEETING MINUTES -->
     <div class="panel" id="panel-minutes">
       <div class="slbl">Meeting minutes</div>
-      <div class="card">
-        <div class="ch"><i class="ti ti-notes" style="color:var(--blue)"></i><span class="ct">Recent minutes</span><span class="ca">+ New minutes</span></div>
-        <div class="di"><div class="dh"><span class="dt">Ops standup — May 20</span><span class="dd">Final</span></div><div class="db">3 action items. SLA review assigned Torres. KR1.2 mitigation plan Gupta.</div></div>
-        <div class="di"><div class="dh"><span class="dt">Dir. Reyes 1:1 — May 18</span><span class="dd">Final</span></div><div class="db">Headcount freeze impact. Two critical open roles. Escalating to president.</div></div>
-        <div class="di"><div class="dh"><span class="dt">Vendor selection working session — May 15</span><span class="dd">Open items</span></div><div class="db">Two vendors shortlisted. Legal review pending. Decision by May 28.</div></div>
+
+      <!-- LIST VIEW -->
+      <div class="minutes-list" id="minutes-list">
+        <div class="card">
+          <div class="ch"><i class="ti ti-notes" style="color:var(--blue)"></i><span class="ct">Recent minutes</span><span class="ca" onclick="showMinutesForm()">+ New minutes</span></div>
+          <div id="minutes-entries">
+            <div class="di"><div class="dh"><span class="dt">Ops standup — May 20</span><span class="dd">Final</span></div><div class="db">3 action items. SLA review assigned Torres. KR1.2 mitigation plan Gupta.</div></div>
+            <div class="di"><div class="dh"><span class="dt">Dir. Reyes 1:1 — May 18</span><span class="dd">Final</span></div><div class="db">Headcount freeze impact. Two critical open roles. Escalating to president.</div></div>
+            <div class="di"><div class="dh"><span class="dt">Vendor selection working session — May 15</span><span class="dd">Open items</span></div><div class="db">Two vendors shortlisted. Legal review pending. Decision by May 28.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM VIEW -->
+      <div class="minutes-form" id="minutes-form">
+        <div class="card">
+          <div class="ch"><i class="ti ti-notes" style="color:var(--blue)"></i><span class="ct">New meeting minutes</span><span class="ca" onclick="hideMinutesForm()" style="color:var(--t3)">← Back to list</span></div>
+
+          <div class="form-row-2" style="margin-bottom:10px">
+            <div><div class="form-label">Meeting title *</div><input class="form-input" id="min-title" placeholder="e.g. Ops standup · Q3 OKR review" /></div>
+            <div><div class="form-label">Date *</div><input class="form-input" id="min-date" type="date" /></div>
+          </div>
+
+          <div style="margin-bottom:10px">
+            <div class="form-label">Who's in the room</div>
+            <input class="form-input" id="min-room" placeholder="e.g. EVP Morris, Dir. Park, VP Chen, M. Torres — 8 attendees" />
+          </div>
+
+          <div style="margin-bottom:10px">
+            <div class="form-label">Decisions made</div>
+            <textarea class="form-ta" id="min-decisions" rows="3" placeholder="List each decision reached in this meeting. Include who made it and any conditions..."></textarea>
+          </div>
+
+          <div style="margin-bottom:10px">
+            <div class="form-label">Action items</div>
+            <textarea class="form-ta" id="min-actions" rows="3" placeholder="Owner · Action · Due date&#10;e.g. M. Torres · Pull Midwest SLA data · May 27&#10;T. Gupta · Submit KR1.3 mitigation plan · May 26"></textarea>
+          </div>
+
+          <div style="margin-bottom:10px">
+            <div class="form-label">Discussion notes</div>
+            <textarea class="form-ta" id="min-notes" rows="5" placeholder="Key points raised, context shared, perspectives expressed. Not a transcript — just what matters..."></textarea>
+          </div>
+
+          <div style="margin-bottom:14px">
+            <div class="form-label">Open points / carry forward</div>
+            <textarea class="form-ta" id="min-open" rows="3" placeholder="Items that need follow-up, unresolved questions, or topics to revisit at the next meeting..."></textarea>
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <button class="fsub" onclick="saveMinutes()">Save minutes</button>
+            <button class="btn-secondary" onclick="hideMinutesForm()">Cancel</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -427,13 +485,16 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
         <div class="card">
           <div class="ch"><i class="ti ti-sitemap" style="color:var(--coral)"></i><span class="ct">Influence / interest matrix</span></div>
           <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px"><span>← Low influence</span><span>High influence →</span></div>
-          <div class="sq-grid">
-            <div class="quadrant"><div class="quad-label">Manage closely</div><span class="s-pill"><span class="dot" style="background:var(--amber)"></span>Dir. Reyes</span><span class="s-pill"><span class="dot" style="background:var(--amber)"></span>VP Chen</span></div>
-            <div class="quadrant"><div class="quad-label">Key players</div><span class="s-pill"><span class="dot" style="background:var(--green)"></span>EVP Morris</span><span class="s-pill"><span class="dot" style="background:var(--green)"></span>CFO Walsh</span><span class="s-pill"><span class="dot" style="background:var(--green)"></span>Dir. Park</span></div>
-            <div class="quadrant"><div class="quad-label">Monitor</div><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>M. Torres</span><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>T. Gupta</span></div>
-            <div class="quadrant"><div class="quad-label">Keep informed</div><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>Reg. leads ×6</span><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>Comms team</span></div>
+          <div style="display:flex;justify-content:flex-end;font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:2px;gap:2px">
+            <div style="width:50%;text-align:center">High influence</div>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-family:var(--mono);margin-top:4px"><span>↑ Low interest</span><span>High interest ↑</span></div>
+          <div class="sq-grid">
+            <div class="quadrant"><div class="quad-label">High interest · High influence</div><span class="s-pill"><span class="dot" style="background:var(--teal)"></span>EVP Morris</span><span class="s-pill"><span class="dot" style="background:var(--teal)"></span>CFO Walsh</span><span class="s-pill"><span class="dot" style="background:var(--teal)"></span>Dir. Park</span></div>
+            <div class="quadrant"><div class="quad-label">Low interest · High influence</div><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>Reg. leads ×6</span><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>Comms team</span></div>
+            <div class="quadrant"><div class="quad-label">High interest · Low influence</div><span class="s-pill"><span class="dot" style="background:var(--amber)"></span>Dir. Reyes</span><span class="s-pill"><span class="dot" style="background:var(--amber)"></span>VP Chen</span></div>
+            <div class="quadrant"><div class="quad-label">Low interest · Low influence</div><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>M. Torres</span><span class="s-pill"><span class="dot" style="background:var(--blue)"></span>T. Gupta</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-family:var(--mono);margin-top:4px"><span>High interest ↑</span><span>↑ Low interest</span></div>
         </div>
         <div class="card">
           <div class="ch"><i class="ti ti-notebook" style="color:var(--coral)"></i><span class="ct">Qualitative notes</span><span class="ca">+ Add note</span></div>
@@ -445,26 +506,7 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
       </div>
     </div>
 
-    <!-- ENGAGEMENT -->
-    <div class="panel" id="panel-engagement">
-      <div class="slbl">Engagement</div>
-      <div class="two">
-        <div class="card">
-          <div class="ch"><i class="ti ti-chart-radar" style="color:var(--green)"></i><span class="ct">Pulse scores by team</span></div>
-          <div class="mrow">
-            <div class="met"><div class="mv" style="color:var(--teall)">84</div><div class="ml">Operations</div><div class="md up">↑ 2</div></div>
-            <div class="met"><div class="mv" style="color:var(--amberl)">76</div><div class="ml">Field teams</div><div class="md dn">↓ 4</div></div>
-            <div class="met"><div class="mv" style="color:var(--teall)">81</div><div class="ml">Programs</div><div class="md up">↑ 1</div></div>
-            <div class="met"><div class="mv" style="color:var(--coral)">68</div><div class="ml">Admin</div><div class="md dn">↓ 7</div></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="ch"><i class="ti ti-message-circle" style="color:var(--green)"></i><span class="ct">Qualitative signals</span><span class="ca">+ Add signal</span></div>
-          <div class="di"><div class="dh"><span class="dt">Admin team morale concern</span><span class="dd">May 21</span></div><div class="db">Three exit interview comments about role clarity. Theme connects to manager effectiveness gap.</div><div class="ow"><span class="sc s-flag">Flag</span><span class="chip">Admin</span></div></div>
-          <div class="di"><div class="dh"><span class="dt">Field recognition gap</span><span class="dd">May 16</span></div><div class="db">Field associates feel disconnected from mission. Opportunity for a visibility program.</div><div class="ow"><span class="sc s-watch">Watching</span><span class="chip">Field</span></div></div>
-        </div>
-      </div>
-    </div>
+
 
     <!-- AI SYNTHESIS -->
     <div class="panel" id="panel-synthesis">
@@ -477,16 +519,15 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
           <div class="action-btn">⚡ Alignment gaps ↗</div>
           <div class="action-btn">⚡ What matters most this week ↗</div>
           <div class="action-btn">⚡ OFE + DBE integration health ↗</div>
-          <div class="action-btn">⚡ Case for keeping DBE ↗</div>
         </div>
-        <div class="ai-bar"><span class="ail">⚡ custom</span><input class="aii" placeholder="Ask anything across the OFE and DBE portfolio..." /><button class="aib">Run →</button></div>
+        <div class="ai-bar"><span class="ail">⚡ custom</span><input class="aii" placeholder="Ask anything across the OFE portfolio..." /><button class="aib">Run →</button></div>
       </div>
     </div>
 
     <!-- WINS & IMPACT -->
     <div class="panel" id="panel-wins">
       <div class="slbl">Wins &amp; impact — Office of the Executive</div>
-      <div class="info-bar" style="background:rgba(146,98,10,0.07);border:1px solid rgba(146,98,10,0.2);color:var(--amber)">This log captures what the office shipped, influenced, and unblocked — across OFE and DBE. The shared evidence base for leadership readouts, annual reviews, and demonstrating the value of the office.</div>
+      <div class="info-bar" style="background:rgba(146,98,10,0.07);border:1px solid rgba(146,98,10,0.2);color:var(--amber)">This log captures what the office influenced and unblocked. The shared evidence base for leadership readouts, annual reviews, and demonstrating the value of the office.</div>
       <div class="two">
         <div class="card">
           <div class="ch"><i class="ti ti-trophy" style="color:var(--amber)"></i><span class="ct">Impact log</span><span class="ca">+ Log win</span></div>
@@ -587,9 +628,18 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
       </div>
     </div>
 
-    <!-- COMMUNITY PULSE -->
+    <!-- COMMUNITY PULSE (merged with Engagement) -->
     <div class="panel" id="panel-community">
       <div class="slbl">Community pulse</div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="ch"><i class="ti ti-chart-radar" style="color:var(--green)"></i><span class="ct">Associate engagement — pulse scores</span></div>
+        <div class="mrow">
+          <div class="met" style="border-top:3px solid var(--teal)"><div class="mv" style="color:var(--teal)">84</div><div class="ml">Operations</div><div class="md up">↑ 2</div></div>
+          <div class="met" style="border-top:3px solid var(--amber)"><div class="mv" style="color:var(--amber)">76</div><div class="ml">Field teams</div><div class="md dn">↓ 4</div></div>
+          <div class="met" style="border-top:3px solid var(--teal)"><div class="mv" style="color:var(--teal)">81</div><div class="ml">Programs</div><div class="md up">↑ 1</div></div>
+          <div class="met" style="border-top:3px solid var(--coral)"><div class="mv" style="color:var(--coral)">68</div><div class="ml">Admin</div><div class="md dn">↓ 7</div></div>
+        </div>
+      </div>
       <div class="two">
         <div class="card">
           <div class="ch"><i class="ti ti-users" style="color:var(--pink)"></i><span class="ct">Qualitative signals</span><span class="ca">+ Add signal</span></div>
@@ -600,9 +650,11 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
         </div>
         <div class="card">
           <div class="ch"><i class="ti ti-sparkles" style="color:var(--pink)"></i><span class="ct">Theme synthesis</span></div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.6">Community signals are qualitative and scattered. Use synthesis to surface patterns before they become issues.</div>
           <div class="action-row">
-            <div class="action-btn">⚡ Synthesize themes for president ↗</div>
-            <div class="action-btn">⚡ Culture brief for president ↗</div>
+            <div class="action-btn">⚡ Synthesize engagement themes for president ↗</div>
+            <div class="action-btn">⚡ Culture health brief ↗</div>
+            <div class="action-btn">⚡ Engagement action plan — Admin team ↗</div>
             <div class="action-btn">⚡ Case to scale mentorship ↗</div>
           </div>
         </div>
@@ -611,22 +663,25 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
 
     <!-- SPEAKING & EVENTS -->
     <div class="panel" id="panel-speaking">
-      <div class="slbl">Speaking &amp; events — President's calendar</div>
+      <div class="slbl">Speaking &amp; events — External engagements</div>
       <div class="two">
         <div class="card">
-          <div class="ch"><i class="ti ti-microphone" style="color:var(--gold)"></i><span class="ct">Upcoming engagements</span><span class="ca">+ Add engagement</span></div>
-          <div class="eng-item"><div class="eng-icon" style="background:var(--goldbg);color:var(--gold)"><i class="ti ti-microphone"></i></div><div style="flex:1"><div class="eng-title">Division all-hands keynote</div><div class="eng-meta">200+ associates · Remarks + Q&amp;A · Internal</div><span class="am">⚡ Draft remarks</span></div><div class="eng-date eng-urgent">Jun 3 · 11d</div></div>
-          <div class="eng-item"><div class="eng-icon" style="background:var(--purplebg);color:var(--purple)"><i class="ti ti-users"></i></div><div style="flex:1"><div class="eng-title">DBE mentorship cohort — president's address</div><div class="eng-meta">24 associates · 15 min welcome + vision</div><span class="am">⚡ Draft welcome</span></div><div class="eng-date">Jun 3</div></div>
-          <div class="eng-item"><div class="eng-icon" style="background:var(--bluebg);color:var(--blue)"><i class="ti ti-building"></i></div><div style="flex:1"><div class="eng-title">Regional leadership summit — panel</div><div class="eng-meta">External · 45 min · Chicago · 2 nights</div><span class="am">⚡ Panel prep</span></div><div class="eng-date">Jun 18</div></div>
-          <div class="eng-item"><div class="eng-icon" style="background:var(--tealbg);color:var(--teal)"><i class="ti ti-handshake"></i></div><div style="flex:1"><div class="eng-title">Partner org board meeting</div><div class="eng-meta">Quarterly update · Report due Jun 30</div><span class="am">⚡ Draft update</span></div><div class="eng-date">Jul 8</div></div>
+          <div class="ch"><i class="ti ti-microphone" style="color:var(--gold)"></i><span class="ct">Upcoming external engagements</span><span class="ca">+ Add engagement</span></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--bluebg);color:var(--blue)"><i class="ti ti-building"></i></div><div style="flex:1"><div class="eng-title">National Workforce Development Conference — keynote</div><div class="eng-meta">External · Main stage · 800+ attendees · Denver, CO</div><span class="am">⚡ Draft keynote</span></div><div class="eng-date eng-urgent">Jun 10 · 4d</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--goldbg);color:var(--gold)"><i class="ti ti-microphone"></i></div><div style="flex:1"><div class="eng-title">Regional leadership summit — panel moderator</div><div class="eng-meta">External · 45 min panel · Chicago · 2 nights</div><span class="am">⚡ Panel prep</span></div><div class="eng-date">Jun 18</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--tealbg);color:var(--teal)"><i class="ti ti-handshake"></i></div><div style="flex:1"><div class="eng-title">Partner org board meeting — quarterly update</div><div class="eng-meta">External board · Report due Jun 30 · In person</div><span class="am">⚡ Draft remarks</span></div><div class="eng-date">Jul 8</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--purplebg);color:var(--purple)"><i class="ti ti-podium"></i></div><div style="flex:1"><div class="eng-title">State HR Directors Roundtable — invited speaker</div><div class="eng-meta">External · 30 min talk + Q&amp;A · Columbus, OH</div><span class="am">⚡ Talk prep</span></div><div class="eng-date">Jul 22</div></div>
+          <div class="eng-item"><div class="eng-icon" style="background:var(--amberbg);color:var(--amber)"><i class="ti ti-news"></i></div><div style="flex:1"><div class="eng-title">Industry publication — thought leadership interview</div><div class="eng-meta">External · Written Q&amp;A format · Workforce Today</div><span class="am">⚡ Draft responses</span></div><div class="eng-date">Aug 5</div></div>
         </div>
         <div class="card">
-          <div class="ch"><i class="ti ti-file-text" style="color:var(--gold)"></i><span class="ct">Comms prep toolkit</span></div>
+          <div class="ch"><i class="ti ti-file-text" style="color:var(--gold)"></i><span class="ct">External comms toolkit</span></div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:12px;line-height:1.6">Prep tools for any external appearance — from keynotes to media to board presentations.</div>
           <div class="action-row">
-            <div class="action-btn">⚡ Define president's voice &amp; themes ↗</div>
-            <div class="action-btn">⚡ Pre-engagement brief template ↗</div>
-            <div class="action-btn">⚡ Q&amp;A anticipation — all-hands ↗</div>
-            <div class="action-btn">⚡ Post-engagement debrief ↗</div>
+            <div class="action-btn">⚡ Define president's external voice &amp; themes ↗</div>
+            <div class="action-btn">⚡ Pre-engagement briefing template ↗</div>
+            <div class="action-btn">⚡ Anticipated Q&amp;A — conference / roundtable ↗</div>
+            <div class="action-btn">⚡ Thought leadership talking points ↗</div>
+            <div class="action-btn">⚡ Post-engagement debrief template ↗</div>
           </div>
         </div>
       </div>
@@ -933,7 +988,7 @@ body{background:var(--bg0);color:var(--t1);font-family:Georgia,serif;font-size:1
 </div>
 
 <script>
-const panels=['overview','capture','briefing','decisions','minutes','initiatives','okrs','acquisitions','stakeholders','engagement','synthesis','wins','relationships','momentum','programs','community','speaking','partnerships','templates'];
+const panels=['overview','capture','briefing','decisions','minutes','initiatives','okrs','acquisitions','stakeholders','synthesis','wins','relationships','momentum','programs','community','speaking','partnerships','templates'];
 function show(n){
   panels.forEach(p=>{const e=document.getElementById('panel-'+p);if(e)e.classList.remove('active');});
   const t=document.getElementById('panel-'+n);if(t)t.classList.add('active');
@@ -944,6 +999,59 @@ function show(n){
 }
 document.getElementById('topbar-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 
+function showMinutesForm(){
+  document.getElementById('minutes-list').classList.add('hidden');
+  document.getElementById('minutes-form').classList.add('visible');
+  // Set today's date as default
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('min-date').value = today;
+}
+
+function hideMinutesForm(){
+  document.getElementById('minutes-list').classList.remove('hidden');
+  document.getElementById('minutes-form').classList.remove('visible');
+  // Clear form
+  ['min-title','min-date','min-room','min-decisions','min-actions','min-notes','min-open'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+}
+
+function saveMinutes(){
+  const title = document.getElementById('min-title').value.trim();
+  const date = document.getElementById('min-date').value;
+  const room = document.getElementById('min-room').value.trim();
+  const decisions = document.getElementById('min-decisions').value.trim();
+  const actions = document.getElementById('min-actions').value.trim();
+  const notes = document.getElementById('min-notes').value.trim();
+  const open = document.getElementById('min-open').value.trim();
+
+  if(!title){alert('Please add a meeting title.');return;}
+  if(!date){alert('Please add a date.');return;}
+
+  // Format display date
+  const d = new Date(date+'T00:00:00');
+  const displayDate = d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+  // Build summary for list view
+  const parts = [];
+  if(actions) parts.push(actions.split('\n').filter(l=>l.trim()).length + ' action item(s)');
+  if(decisions) parts.push(decisions.split('\n').filter(l=>l.trim()).length + ' decision(s)');
+  if(open) parts.push('Open points noted');
+  const summary = parts.join(' · ') || 'Notes recorded';
+
+  // Build detail text for expanded view
+  let detail = '';
+  if(room) detail += '<div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:2px">'+room+'</div>';
+
+  // Inject into list
+  const entries = document.getElementById('minutes-entries');
+  const newEntry = document.createElement('div');
+  newEntry.className = 'di';
+  newEntry.innerHTML = '<div class="dh"><span class="dt">'+title+' — '+displayDate+'</span><span class="dd">Draft</span></div><div class="db">'+summary+'</div>'+detail;
+  entries.insertBefore(newEntry, entries.firstChild);
+
+  hideMinutesForm();
+}
 </script>
 </body>
 </html>
